@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "path";
 import { fileURLToPath } from "url";
 
 //configurations..
@@ -23,3 +24,21 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 //file storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "public/assets");
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname + new Date());
+    }
+});
+const upload = multer({ storage });
+
+//mongoose setup
+const PORT = process.env.PORT || 7000;
+
+mongoose.connect(process.env.MONGO_URL, {
+    useUnifiedTopology: true
+}).then(() => {
+    app.listen(PORT, () => console.log("server runs successfully"));
+}).catch((error) => console.log(`${error} server did not connect`));
