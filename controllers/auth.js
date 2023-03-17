@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { Jwt } from "jsonwebtoken";
+//import { Jwt } from "jsonwebtoken";
 
 
 export const register = async (req, res) => {
