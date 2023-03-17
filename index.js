@@ -8,6 +8,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
+import { register } from "./controllers/auth.js";
 
 //configurations..
 const __filename = fileURLToPath(import.meta.url) //the url of the current module is converted to a file path
