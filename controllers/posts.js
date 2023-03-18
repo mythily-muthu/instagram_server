@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 
 
-
+//create
 export const createPost = async (req, res) => {
     try {
         const { userId, description, picturePath } = req.body;
@@ -30,12 +30,12 @@ export const createPost = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 };
-
+//get all posts
 export const getFeedPosts = async (req, res) => {
     try {
-
+        const post = await Post.find();
+        res.status(200).json(post);
     } catch (error) {
-
-    }
-
-}
+        res.status(409).json({ message: error.message });
+    };
+};
