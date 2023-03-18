@@ -14,6 +14,15 @@ import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 import { createPost } from "./controllers/posts.js";
+import User from "./models/User.js";
+import Post from "./models/Post.js";
+import { users, posts } from "./data/index.js";
+
+
+
+
+
+
 //configurations..
 const __filename = fileURLToPath(import.meta.url) //the url of the current module is converted to a file path
 const __dirname = path.dirname(__filename);//represents the directory path of the module file
@@ -57,4 +66,8 @@ mongoose.connect(process.env.MONGO_URL, {
     useUnifiedTopology: true
 }).then(() => {
     app.listen(PORT, () => console.log("server runs successfully"));
+    // add data one time
+    // User.insertMany(users);
+    // Post.insertMany(posts);
+
 }).catch((error) => console.log(`${error} server did not connect`));
