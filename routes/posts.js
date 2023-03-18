@@ -1,8 +1,10 @@
 import express from "express";
-import { getFeedPosts } from "../controllers/posts";
-import { verifyToken } from "../middleware/auth";
+import { getFeedPosts } from "../controllers/posts.js";
+import { verifyToken } from "../middleware/auth.js";
 
 
 const router = express.Router();
 
-router.put("/", verifyToken, getFeedPosts);
+router.get("/", verifyToken, getFeedPosts);
+
+export default router;
