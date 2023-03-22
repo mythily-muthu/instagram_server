@@ -27,13 +27,13 @@ export const createPost = async (req, res) => {
         const post = await Post.find();
         res.status(201).json(post);
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        res.status(409).json({ message: error.message });
     }
 };
 //get all posts (read)
 export const getFeedPosts = async (req, res) => {
     try {
-        const post = await Post.find();
+        const post = await Post.find().sort({ createdAt: -1 });
         res.status(200).json(post);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -43,9 +43,11 @@ export const getFeedPosts = async (req, res) => {
 //get user posts
 export const getUserPosts = async (req, res) => {
     try {
-        const { userId } = req.params;
-        const post = await User.findById(userId);
-        res.status(200).json(post)
+        // const { userId } = req.params;
+        const user_id = req.params.id;
+        console.log('userId', req.params)
+        const posts = await Post.find({ userId: user_id }).sort({ createdAt: -1 });
+        res.status(200).json(posts)
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -75,4 +77,14 @@ export const likePost = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 
+}
+
+export const deletePost = async (req, res) => {
+    try {
+        const post_id = req.params.id
+        await Post.findByIdAndDelete(post_id);
+        res.status(200).json({ message: "deleted successfully" });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
 }

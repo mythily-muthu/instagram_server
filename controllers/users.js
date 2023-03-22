@@ -6,11 +6,14 @@ export const getUser = async (req, res) => {
     try {
         let { id } = req.params;
         const user = await User.findById(id);
-        res.status(200).json(user);
+        user.password = undefined;
+        res.status(200).send(user);
     } catch (error) {
         res.status(404).json({ message: error.message });
     };
 };
+
+
 //get friends of the user
 export const getUserFriends = async (req, res) => {
     try {
@@ -30,19 +33,22 @@ export const getUserFriends = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+
 export const addRemoveFriend = async (req, res) => {
     try {
         let { id, friendId } = req.params;
-        const user = await User.findById(id);
-        const friend = await User.findById(friendId);
-        //to remove friend
+        let user = await User.findById(id);  //get user details from db
+        let friend = await User.findById(friendId);
+
         if (user.friends.includes(friendId)) {
-            user.friends = user.friends.filter((id) !== friendId);
-            friend.friends = friend.friends.filter((id) !== id);
+            //remove friend
+            user.friends = user.friends.filter((frd_id) => frd_id !== friendId); //returns modified array
+            friend.friends = friend.friends.filter((frd_id) => frd_id !== id);
         } else {
-            user.friends.push(friendId); // to add friend
+            //add friend 
+            user.friends.push(friendId);
             friend.friends.push(id);
-        };
+        }
         await user.save();
         await friend.save();
 
@@ -51,12 +57,13 @@ export const addRemoveFriend = async (req, res) => {
         );
         const formattedFriends = friends.map(
             ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-                return { _id, firstName, lastName, occupation, location, picturePath }
+                return { _id, firstName, lastName, occupation, location, picturePath };
             }
         );
+
         res.status(200).json(formattedFriends)
 
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        res.status(404).json({ msg: error.message })
     }
 }
